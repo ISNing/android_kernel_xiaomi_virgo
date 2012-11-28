@@ -205,8 +205,6 @@ struct dentry_operations {
 #define DCACHE_MOUNTED			0x00010000 /* is a mountpoint */
 #define DCACHE_NEED_AUTOMOUNT		0x00020000 /* handle automount on this dir */
 #define DCACHE_MANAGE_TRANSIT		0x00040000 /* manage transit from this dirent */
-//CHECKIT
-#define DCACHE_NEED_LOOKUP		0x80000 /* dentry requires i_op->lookup */
 #define DCACHE_MANAGED_DENTRY \
 	(DCACHE_MOUNTED|DCACHE_NEED_AUTOMOUNT|DCACHE_MANAGE_TRANSIT)
 
@@ -420,13 +418,6 @@ static inline bool d_mountpoint(struct dentry *dentry)
 {
 	return dentry->d_flags & DCACHE_MOUNTED;
 }
-
-static inline bool d_need_lookup(struct dentry *dentry)
-{
-	return dentry->d_flags & DCACHE_NEED_LOOKUP;
-}
-
-extern void d_clear_need_lookup(struct dentry *dentry);
 
 static inline bool d_is_su(const struct dentry *dentry)
 {
