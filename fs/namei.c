@@ -2227,11 +2227,12 @@ other_userns:
  */
 static int may_delete(struct vfsmount *mnt, struct inode *dir,struct dentry *victim,int isdir)
 {
+	struct inode *inode = victim->d_inode;
 	int error;
 
 	if (d_is_negative(victim))
 		return -ENOENT;
-	BUG_ON(!inode)
+	BUG_ON(!inode);
 
 	BUG_ON(victim->d_parent->d_inode != dir);
 	audit_inode_child(victim, dir);
