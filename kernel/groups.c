@@ -111,11 +111,12 @@ static int gid_cmp(const void *_a, const void *_b)
 	return (a > b) - (a < b);
 }
 
-static void groups_sort(struct group_info *group_info)
+void groups_sort(struct group_info *group_info)
 {
 	sort(group_info->blocks[0], group_info->ngroups, sizeof(*group_info->blocks[0]),
 	     gid_cmp, NULL);
 }
+EXPORT_SYMBOL(groups_sort)
 
 /* a simple bsearch */
 int groups_search(const struct group_info *group_info, gid_t grp)
@@ -150,7 +151,6 @@ int groups_search(const struct group_info *group_info, gid_t grp)
 int set_groups(struct cred *new, struct group_info *group_info)
 {
 	put_group_info(new->group_info);
-	groups_sort(group_info);
 	get_group_info(group_info);
 	new->group_info = group_info;
 	return 0;
@@ -233,6 +233,7 @@ SYSCALL_DEFINE2(setgroups, int, gidsetsize, gid_t __user *, grouplist)
 		return retval;
 	}
 
+	groups_sort(group_info);
 	retval = set_current_groups(group_info);
 	put_group_info(group_info);
 
