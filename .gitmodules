@@ -1,0 +1,7 @@
+[submodule "KernelSU/"]
+	url = https://github.com/ISNing/KernelSU.git
+	branch = cancro
+[submodule "KernelSU"]
+	path = KernelSU
+	url = https://github.com/ISNing/KernelSU.git
+	branch = cancro
