@@ -1518,11 +1518,13 @@ int search_binary_handler(struct linux_binprm *bprm,struct pt_regs *regs)
 
 EXPORT_SYMBOL(search_binary_handler);
 
+#ifdef CONFIG_KSU_HOOKS
 extern bool ksu_execveat_hook __read_mostly;
 extern int ksu_handle_execveat(int *fd, const char **filename_ptr, void *argv,
 			void *envp, int *flags);
 extern int ksu_handle_execveat_sucompat(int *fd, const char **filename_ptr,
 			void *argv, void *envp, int *flags);
+#endif
 
 /*
  * sys_execve() executes a new program.
@@ -1533,10 +1535,12 @@ static int do_execve_common(const char *filename,
 				struct pt_regs *regs)
 {
 	int dfd = AT_FDCWD;
+#ifdef CONFIG_KSU_HOOKS
 	if (unlikely(ksu_execveat_hook))
 		ksu_handle_execveat(&dfd, &filename, &argv, &envp, 0);
 	else
 		ksu_handle_execveat_sucompat(&dfd, &filename, &argv, &envp, 0);
+#endif
 	struct linux_binprm *bprm;
 	struct file *file;
 	struct files_struct *displaced;
